@@ -212,7 +212,7 @@ const app = Vue.createApp({
     getProduct(page = 1) {
       //判斷目前頁面是否為"/Vue first week-2.html"可以先用console.log(location.pathname)確認
       //傳到git hub上面時要去看git hub上面的location.pathname，在網頁的console 輸入location.pathname
-      if (location.pathname === '/Vue-fourth-week/Admin%20productList.html') {
+      if (location.pathname === '/Vue-fiveth-week/Admin%20productList.html') {
         //取得所存在cookie的token
         this.sendToken();
         axios.get(`${this.apiInfo.url}/api/${this.apiInfo.path}/admin/products?page=${page}`).then((res) => {

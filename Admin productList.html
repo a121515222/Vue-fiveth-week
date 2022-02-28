@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style/button.css">
+    <title>Admin productList</title>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.min.js"
+        integrity="sha512-OvBgP9A2JBgiRad/mM36mkzXSXaJE9BEIENnVEmeZdITvwT09xnxLtT4twkCa8m/loMbPHsvPl0T8lRGVBwjlQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"
+        integrity="sha512-u9akINsQsAkG9xjc1cnGF4zw5TFDwkxuc9vUp5dltDWYCSmyd0meygbvgXrlc/z7/o4a19Fb5V0OUE58J7dcyw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/mitt/dist/mitt.umd.js"></script>
+    <!-- validate套件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vee-validate/4.5.8/vee-validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@vee-validate/rules@4.5.8/dist/vee-validate-rules.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@vee-validate/i18n@4.5.8/dist/vee-validate-i18n.min.js"></script>
+</head>
+
+<body>
+    <div class="container" id="app">
+        <div class="row py-5">
+            <h2>產品列表</h2>
+            <div class="d-flex justify-content-end">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" id="modalbutton" @click="isNew=true;openModal();">
+                    增加商品
+                </button>
+            </div>
+            <div class="col-12 py-3">
+                <div class="border rounded">
+                    <table class="table table-hover ">
+                        <tr>
+                            <th>產品名稱</th>
+                            <th>原價</th>
+                            <th>售價</th>
+                            <th>是否啟用</th>
+                            <th>查看細節</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr v-for="(item,index) in products" :key="item.id">
+                            <td>{{item.title}}</td>
+                            <td>{{item.origin_price}}</td>
+                            <td>{{item.price}}</td>
+                            <td>{{porductStatus(item.is_enabled)}}
+                                <!-- <div class="switch">
+                                    <input class="switch-checkbox" :id="item.id" type="checkbox" name="switch-checkbox"
+                                        :checked="item.is_enabled" @click="activeProduct" :data-index="index">
+                                    <label class="switch-label" :for="item.id">
+                                        <span class="switch-txt" turnOn="是" turnOff="否"></span>
+                                        <span class="switch-Round-btn"></span>
+                                    </label>
+                                </div> -->
+                            </td>
+                            <td><button class="btn btn-primary" :data-index="index" type="button"
+                                    @click="showProduct(item)">查看細節</button></td>
+                            <td><button class="btn btn-success" :data-index="index" type="button"
+                                    @click="postId=item.id;isNew=false;openModal(item);">編輯</button></td>
+                            <td><button class="btn btn-outline-danger" type="button"
+                                    @click="postId=item.id;deleteProduct();">刪除</button></td>
+                        </tr>
+                    </table>
+                    <p class="px-1">一共有{{products.length}}項產品</p>
+                </div>
+                <paginations :pagination="page" @send-page="getProduct">
+                    </pagination>
+            </div>
+            <h2>單一產品細節</h2>
+
+            <div class="col-8 mx-auto py-3">
+                <template v-if="productTemp.id">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="img"><img :src="productTemp.imageUrl" alt=""></div>
+                            <div class="d-flex">
+                                <p>{{productTemp.title}}<span class="badge bg-primary">{{productTemp.category}}</span>
+                                </p>
+
+                            </div>
+                            <p>商品描述:{{productTemp.description}}</p>
+                            <p>商品內容:{{productTemp.content}}</p>
+                            <div class="d-flex"><span>{{productTemp.price}}</span><span
+                                    class="line-through px-2 fw-light text-black-50">{{productTemp.origin_price}}</span><span>元/{{productTemp.unit}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3 py-3">
+                        <div class="w-25" v-for="(img,index) in productTemp.imagesUrl" :key="img+index"><img :src="img"
+                                alt="">
+                        </div>
+                    </div>
+                </template>
+                <p class="" v-else>請選擇一個商品查看</p>
+            </div>
+        </div>
+        <!-- Modal -->
+        <modal :input-product="inputProduct" :is-new="isNew" @send-input-data="receModalData;editPorductList()"
+            ref="myModal"></modal>
+    </div>
+
+    <script type="module" src="./js/all.js"></script>
+</body>
+
+</html>

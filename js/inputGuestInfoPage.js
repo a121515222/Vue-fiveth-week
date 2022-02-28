@@ -50,23 +50,26 @@ export default {
                         email: '',
                         address: '',
                     },
-                    message:'',
-                    orderid:''
+                    message: '',
+                    orderid: ''
                 }
             }
             sendData.data.user.name = this.user.name;
             sendData.data.user.tel = this.user.tel;
             sendData.data.user.email = this.user.email;
             sendData.data.user.address = this.user.address;
-            sendData.message = this.message ;
+            sendData.message = this.message;
 
-            axios.post(`${this.apiInfo.url}/api/${this.apiInfo.path}/order`,sendData)
-            .then((res) => {
-                this.orderid = res.data.orderId
-               alert(res.data.message)
+            axios.post(`${this.apiInfo.url}/api/${this.apiInfo.path}/order`, sendData)
+                .then((res) => {
+                    //清除購物車內容
+                    axios.delete(`${this.apiInfo.url}/api/${this.apiInfo.path}/carts`).then((res) => {
+                    }).catch((error) => { console.dir(error) });
+                    this.orderid = res.data.orderId
+                    alert(res.data.message)
 
-                console.log(res.data)
-            }).catch((error) => { console.dir(error) });
+                    console.log(res.data)
+                }).catch((error) => { console.dir(error) });
             this.$refs.form.resetForm();
             this.message = '';
         }
